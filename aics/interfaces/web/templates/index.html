@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Coding Assistant</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+        h1 { color: #333; }
+        .section { margin-bottom: 20px; }
+        input[type="text"], input[type="number"], textarea { width: 300px; padding: 5px; }
+        button { padding: 5px 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        #result { margin-top: 20px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>AI Coding Assistant</h1>
+    
+    <div class="section">
+        <h2>Generate Code</h2>
+        <input type="text" id="generate-prompt" placeholder="Enter prompt">
+        <input type="text" id="generate-provider" placeholder="Provider (optional)">
+        <input type="text" id="generate-model" placeholder="Model (optional)">
+        <button onclick="generateCode()">Generate</button>
+    </div>
+
+    <div class="section">
+        <h2>Explain Code</h2>
+        <textarea id="explain-code" placeholder="Enter code to explain" rows="4"></textarea>
+        <input type="text" id="explain-provider" placeholder="Provider (optional)">
+        <input type="text" id="explain-model" placeholder="Model (optional)">
+        <button onclick="explainCode()">Explain</button>
+    </div>
+
+    <div class="section">
+        <h2>Analyze File</h2>
+        <input type="text" id="analyze-file-path" placeholder="Enter file path">
+        <input type="text" id="analyze-provider" placeholder="Provider (optional)">
+        <input type="text" id="analyze-model" placeholder="Model (optional)">
+        <button onclick="analyzeFile()">Analyze</button>
+    </div>
+
+    <div class="section">
+        <h2>Create RAG</h2>
+        <input type="text" id="rag-file-path" placeholder="Enter file path">
+        <input type="text" id="rag-provider" placeholder="Provider (optional)">
+        <input type="text" id="rag-model" placeholder="Model (optional)">
+        <button onclick="createRAG()">Create RAG</button>
+    </div>
+
+    <div class="section">
+        <h2>Query RAG</h2>
+        <input type="text" id="rag-query" placeholder="Enter query">
+        <input type="text" id="query-provider" placeholder="Provider (optional)">
+        <input type="text" id="query-model" placeholder="Model (optional)">
+        <button onclick="queryRAG()">Query RAG</button>
+    </div>
+
+    <div class="section">
+        <h2>Load Dataset</h2>
+        <input type="text" id="dataset-path" placeholder="Enter dataset path">
+        <input type="text" id="dataset-provider" placeholder="Provider (optional)">
+        <input type="text" id="dataset-model" placeholder="Model (optional)">
+        <button onclick="loadDataset()">Load Dataset</button>
+    </div>
+
+    <div class="section">
+        <h2>Analyze Dataset Row</h2>
+        <input type="number" id="iterations" placeholder="Number of iterations">
+        <input type="number" id="row-index" placeholder="Row index (optional)">
+        <input type="text" id="analyze-row-provider" placeholder="Provider (optional)">
+        <input type="text" id="analyze-row-model" placeholder="Model (optional)">
+        <button onclick="analyzeDatasetRow()">Analyze Row</button>
+    </div>
+
+    <div class="section">
+        <h2>Generate Project</h2>
+        <textarea id="project-requirement" placeholder="Enter project requirement" rows="4"></textarea>
+        <input type="text" id="output-dir" placeholder="Output directory (optional)">
+        <input type="text" id="project-provider" placeholder="Provider (optional)">
+        <input type="text" id="project-model" placeholder="Model (optional)">
+        <button onclick="generateProject()">Generate Project</button>
+    </div>
+
+    <div id="result"></div>
+
+    <script>
+        function generateCode() {
+            const prompt = document.getElementById('generate-prompt').value;
+            const provider = document.getElementById('generate-provider').value;
+            const model = document.getElementById('generate-model').value;
+            const data = new FormData();
+            data.append('prompt', prompt);
+            if (provider) data.append('provider', provider);
+            if (model) data.append('model', model);
+
+            axios.post('/generate', data)
+            .then(response => {
+                document.getElementById('result').textContent = response.data.generated_code;
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = `Error: ${error.response.data.error}`;
+            });
+        }
+
+        function explainCode() {
+            const code = document.getElementById('explain-code').value;
+            const provider = document.getElementById('explain-provider').value;
+            const model = document.getElementById('explain-model').value;
+            const data = new FormData();
+            data.append('code', code);
+            if (provider) data.append('provider', provider);
+            if (model) data.append('model', model);
+
+            axios.post('/explain', data)
+            .then(response => {
+                document.getElementById('result').textContent = response.data.explanation;
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = `Error: ${error.response.data.error}`;
+            });
+        }
+
+        function analyzeFile() {
+            const filePath = document.getElementById('analyze-file-path').value;
+            const provider = document.getElementById('analyze-provider').value;
+            const model = document.getElementById('analyze-model').value;
+            const data = new FormData();
+            data.append('file_path', filePath);
+            if (provider) data.append('provider', provider);
+            if (model) data.append('model', model);
+
+            axios.post('/analyze', data)
+            .then(response => {
+                document.getElementById('result').textContent = response.data.analysis;
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = `Error: ${error.response.data.error}`;
+            });
+        }
+
+        function createRAG() {
+            const filePath = document.getElementById('rag-file-path').value;
+            const provider = document.getElementById('rag-provider').value;
+            const model = document.getElementById('rag-model').value;
+            const data = new FormData();
+            data.append('file_path', filePath);
+            if (provider) data.append('provider', provider);
+            if (model) data.append('model', model);
+
+            axios.post('/create-rag', data)
+            .then(response => {
+                document.getElementById('result').textContent = response.data.message;
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = `Error: ${error.response.data.error}`;
+            });
+        }
+
+        function queryRAG() {
+            const query = document.getElementById('rag-query').value;
+            const provider = document.getElementById('query-provider').value;
+            const model = document.getElementById('query-model').value;
+            const data = new FormData();
+            data.append('query', query);
+            if (provider) data.append('provider', provider);
+            if (model) data.append('model', model);
+
+            axios.post('/query-rag', data)
+            .then(response => {
+                document.getElementById('result').textContent = response.data.response;
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = `Error: ${error.response.data.error}`;
+            });
+        }
+
+        function loadDataset() {
+            const datasetPath = document.getElementById('dataset-path').value;
+            const provider = document.getElementById('dataset-provider').value;
+            const model = document.getElementById('dataset-model').value;
+            const data = new FormData();
+            data.append('dataset_path', datasetPath);
+            if (provider) data.append('provider', provider);
+            if (model) data.append('model', model);
+
+            axios.post('/load-dataset', data)
+            .then(response => {
+                document.getElementById('result').textContent = response.data.message;
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = `Error: ${error.response.data.error}`;
+            });
+        }
+
+        function analyzeDatasetRow() {
+            const iterations = document.getElementById('iterations').value;
+            const rowIndex = document.getElementById('row-index').value;
+            const provider = document.getElementById('analyze-row-provider').value;
+            const model = document.getElementById('analyze-row-model').value;
+            const data = new FormData();
+            data.append('iterations', iterations);
+            if (rowIndex) data.append('row_index', rowIndex);
+            if (provider) data.append('provider', provider);
+            if (model) data.append('model', model);
+
+            axios.post('/analyze-dataset-row', data)
+            .then(response => {
+                document.getElementById('result').textContent = JSON.stringify(response.data.analysis, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = `Error: ${error.response.data.error}`;
+            });
+        }
+
+        function generateProject() {
+            const requirement = document.getElementById('project-requirement').value;
+            const outputDir = document.getElementById('output-dir').value || '.';
+            const provider = document.getElementById('project-provider').value;
+            const model = document.getElementById('project-model').value;
+            const data = new FormData();
+            data.append('requirement', requirement);
+            data.append('output_dir', outputDir);
+            if (provider) data.append('provider', provider);
+            if (model) data.append('model', model);
+
+            axios.post('/generate-project', data)
+            .then(response => {
+                document.getElementById('result').textContent = JSON.stringify(response.data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('result').textContent = `Error: ${error.response.data.error}`;
+            });
+        }
+    </script>
+</body>
+</html>

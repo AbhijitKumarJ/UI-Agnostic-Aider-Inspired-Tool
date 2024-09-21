@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+flask
+click
+httpx
+pydantic
+openai
+ollama
+langchain
+langchain-community
+chromadb
+sentence-transformers
+pandas
+python-decouple
+python-dotenv
+onnxruntime
